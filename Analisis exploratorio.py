@@ -2,8 +2,11 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 
-#Apertura de los datos
+#Apertura de los datos Daniel
 data_cardiaca = pd.read_csv("Analitica computacional/Proyecto1 Enfermedades cardiacas/cleveland_data.csv")
+
+#Apertura datos Christer
+#data_cardiaca = pd.read_csv("cleveland_data.csv")
 
 #En las variables ca y thal hay datos faltantes que se ubican con el simbolo ?
 print(data_cardiaca.loc[data_cardiaca["ca"]=="?"])
