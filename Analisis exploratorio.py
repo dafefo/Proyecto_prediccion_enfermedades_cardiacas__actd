@@ -37,12 +37,10 @@ data_cardiaca.insert(1,"age_group", edad_discrt)
 chol_discrt = pd.cut(data_cardiaca["chol"],bins=[0,200,240,600], labels = ["normal","alto","muy alto"])
 data_cardiaca.insert(6,"chol_group",chol_discrt)
 
-print(data_cardiaca.head())
 #Se crea una varibale categorica para la presion sanguinea en reposo
 trestbps_discrt = pd.cut(data_cardiaca["trestbps"],bins=[0,119,129,139,179,210], labels=["normal","elevada","presion arterial nivel 1","presion arterial nivel 2","crisis"])
 data_cardiaca.insert(5,"trestbps_group", trestbps_discrt)
 
-print(data_cardiaca.head())
 
 #Distribucion de las edades categorizando por sexo y si esta diagnosticado con enfermedad cardiaca
 fig = px.histogram(data_cardiaca,x = "age", color = "sex", pattern_shape = "cardiac",
@@ -101,5 +99,3 @@ fig.add_annotation(x=250,
             showarrow=True,
             arrowhead=1)
 fig.show()
-
-a = 1
