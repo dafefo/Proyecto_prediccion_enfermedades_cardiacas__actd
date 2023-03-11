@@ -68,3 +68,26 @@ model.check_model()
 infer = VariableElimination(model)
 posterior_p = infer.query(["cardiac"], evidence={"sex": 1, "age_group":"Mayor", "chol_group": "normal", "fbs": 1, "exang": 1})
 print(posterior_p)
+
+######################Función###########################################
+
+
+def calcularProbabilidad(psexo, pgrupoEdad, pgrupoColesterol, pfbs, pexang, pcp, ptrestbpsgroup, prestcg, pslope,pca, pthal):
+    
+    probabilidadEstimada=infer.query(["cardiac"], evidence={"sex": psexo, "age_group":pgrupoEdad, "chol_group": pgrupoColesterol, "fbs": pfbs, "exang": pexang , "cp":pcp , "trestbps_group":ptrestbpsgroup , "restecg":prestcg , "slope":pslope , "ca":pca , "thal":pthal})
+    return probabilidadEstimada
+    
+
+print(calcularProbabilidad(1,"Mayor","normal",1,1,4,"elevada",2,3,2,6).values)
+
+lista= ["Mayor",1,1,"normal","normal",1,2,0,3,0,6]
+
+###############################
+###############################
+def calcularProbabilidadl(selected_values_list):
+    
+    probabilidadEstimada=infer.query(["cardiac"], evidence={"sex": selected_values_list[1], "age_group":selected_values_list[0], "chol_group": selected_values_list[4], "fbs": selected_values_list[5], "exang": selected_values_list[7], "cp":selected_values_list[2] , "trestbps_group":selected_values_list[3] , "restecg":selected_values_list[6], "slope":selected_values_list[8] , "ca":selected_values_list[9] , "thal":selected_values_list[10]})
+    return probabilidadEstimada
+    
+
+print(calcularProbabilidadl(lista))
