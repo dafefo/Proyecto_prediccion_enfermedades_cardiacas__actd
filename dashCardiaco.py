@@ -167,9 +167,12 @@ def update_output(n_clicks, *selected_values):
     if n_clicks > 0:
         selected_values_list = [val if val != "?" else None for val in selected_values]
         print(selected_values_list)
+        print(calcularProbabilidad(selected_values_list))
+        probs=calcularProbabilidad(selected_values_list)
         return html.Div([
-            html.H4('Selected values:'),
-            html.P(calcularProbabilidad(selected_values_list).values[0])
+            html.H4('Probabilidades:'),
+            html.P("No tener enfermedad cardiaca: "+str(probs.values[0])+"\n"+"Tener enfermedad cardiaca: "+str(probs.values[1]))
+            
         ])
 
 # Run the app
