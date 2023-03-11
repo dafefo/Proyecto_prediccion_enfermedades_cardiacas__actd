@@ -101,15 +101,15 @@ from dash.dependencies import Input, Output, State
 df= data_cardiaca
 
 # Rename the columns with descriptive names
-#df.columns = [
- #   'age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach',
-  #  'exang', 'oldpeak', 'slope', 'ca', 'thal', 'target'
-#]
+df.columns = [
+    'age', 'edad', 'sexo', 'cp', 'rtrestbps','trestbps', 'rchol','colesterol', 'fbs', 'restecg', 'thalach',
+    'exang', 'oldpeak', 'pendiente', 'ca', 'thal','num', 'cardiac'
+]
 
 # Define the variables to include in the dropdown menus
-dropdown_vars = [col for col in df.columns if col not in ['index','age','trestbps','chol','thalach', 'oldpeak','num','cardiac', 'target']]
-#dropdown_vars.remove('age')  # Remove the 'age' variable
-#dropdown_vars.insert(0, 'age')  # Insert 'age' at the beginning
+dropdown_vars = [col for col in df.columns if col not in ['index','age','rtrestbps','rchol','thalach', 'oldpeak','num','cardiac', 'target']]
+
+
 
 # Define the app layout
 app = dash.Dash(__name__)
@@ -121,19 +121,19 @@ app.layout = html.Div([
             options=[
                 {'label': 'Mayor', 'value': 'Mayor'},
                 {'label': 'Joven', 'value': 'Joven'}
-            ] if var == 'age_group' else (
+            ] if var == 'edad' else (
                 [
                     {'label': 'normal', 'value': 'normal'},
                     {'label': 'elevada', 'value': 'elevada'},
                     {'label': 'presion arterial nivel 1', 'value': 'nivel 1'},
                     {'label': 'presion arterial nivel 2', 'value': 'nivel 2'},
                     {'label': 'crisis', 'value': 'crisis'}
-                ] if var == 'trestbps_group' else (
+                ] if var == 'trestbps' else (
                     [
                         {'label': 'normal', 'value': 'normal'},
                         {'label': 'alto', 'value': 'alto'},
                         {'label': 'muy alto', 'value': 'muy alto'}
-                    ] if var == 'chol_group' else
+                    ] if var == 'colesterol' else
                         [
                             {'label': '0', 'value': 0},
                             {'label': '3', 'value': 3},
