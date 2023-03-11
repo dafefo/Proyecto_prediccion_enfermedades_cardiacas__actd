@@ -82,7 +82,6 @@ print(posterior_p)
 #print(calcularProbabilidad(1,"Mayor","normal",1,1,4,"elevada",2,3,2,6))
 ###############################
 def calcularProbabilidad(selected_values_list):
-    
     probabilidadEstimada=infer.query(["cardiac"], evidence={"sex": selected_values_list[1], "age_group":selected_values_list[0], "chol_group": selected_values_list[4], "fbs": selected_values_list[5], "exang": selected_values_list[7], "cp":selected_values_list[2] , "trestbps_group":selected_values_list[3] , "restecg":selected_values_list[6], "slope":selected_values_list[8] , "ca":selected_values_list[9] , "thal":selected_values_list[10]})
     return probabilidadEstimada
 
@@ -154,6 +153,7 @@ app.layout = html.Div([
 ] + [
     html.Button('Submit', id='submit-button', n_clicks=0),
     html.Div(id='output-container', children='')
+    
 ])
 
 # Define the app callback
