@@ -15,10 +15,10 @@ from pgmpy.estimators import MaximumLikelihoodEstimator
 from pgmpy.inference import VariableElimination
 ##################CARGA Y MANIPULACION DE DATOS#####################################################
 #Apertura de los datos Daniel
-data_cardiaca = pd.read_csv("Analitica computacional/Proyecto1 Enfermedades cardiacas/cleveland_data.csv")
+#data_cardiaca = pd.read_csv("Analitica computacional/Proyecto1 Enfermedades cardiacas/cleveland_data.csv")
 
 #Apertura datos Christer
-#data_cardiaca = pd.read_csv("C:/Users/baka/Desktop/analitica/Proyectos/Proyecto_prediccion_enfermedades_cardiacas__actd/cleveland_data.csv")
+data_cardiaca = pd.read_csv("C:/Users/baka/Desktop/analitica/Proyectos/Proyecto_prediccion_enfermedades_cardiacas__actd/cleveland_data.csv")
 
 #En las variables ca y thal hay datos faltantes que se ubican con el simbolo ?
 print(data_cardiaca.loc[data_cardiaca["ca"]=="?"])
@@ -120,14 +120,14 @@ app.layout = html.Div([
         dcc.Dropdown(
             id=f'{var}-dropdown',
             options=[
-                {'label': 'Mayor', 'value': 'Mayor'},
-                {'label': 'Joven', 'value': 'Joven'}
+                {'label': 'Mayor de 50', 'value': 'Mayor'},
+                {'label': 'Menor de 50', 'value': 'Joven'}
             ] if var == 'edad' else (
                 [
                     {'label': 'normal', 'value': 'normal'},
                     {'label': 'elevada', 'value': 'elevada'},
-                    {'label': 'presion arterial nivel 1', 'value': 'nivel 1'},
-                    {'label': 'presion arterial nivel 2', 'value': 'nivel 2'},
+                    {'label': 'presion arterial nivel 1', 'value': 'presion arterial nivel 1'},
+                    {'label': 'presion arterial nivel 2', 'value': 'presion arterial nivel 2'},
                     {'label': 'crisis', 'value': 'crisis'}
                 ] if var == 'trestbps' else (
                     [
@@ -136,17 +136,52 @@ app.layout = html.Div([
                         {'label': 'muy alto', 'value': 'muy alto'}
                     ] if var == 'colesterol' else
                         [
-                            {'label': '0', 'value': 0},
-                            {'label': '3', 'value': 3},
-                            {'label': '2', 'value': 2},
-                            {'label': '1', 'value': 1}
+                            {'label': 'Ningún vaso coloreado', 'value': 0},
+                            {'label': '3 coloreados', 'value': 3},
+                            {'label': '2 coloreados', 'value': 2},
+                            {'label': '1 coloreado', 'value': 1}
                         ] if var == 'ca' else
                             [
-                                {'label': '6', 'value': 6},
-                                {'label': '3', 'value': 3},
-                                {'label': '7', 'value': 7}
+                                {'label': 'Error fijo', 'value': 6},
+                                {'label': 'Normal', 'value': 3},
+                                {'label': 'Error reversible', 'value': 7}
                             ] if var == 'thal' else
+                          
+                                [
+                                    {'label': 'Mujer', 'value': 0},
+                                    {'label': 'Hombre', 'value': 1},
+                                    
+                                ] if var == 'sexo' else
+                                    [
+                                        {'label': 'Angina típica', 'value': 1},
+                                        {'label': 'Angina atípica', 'value': 2},
+                                        {'label': 'Dolor no angina', 'value': 3},
+                                        {'label': 'Asintomático', 'value': 4}
+                                    ] if var == 'cp' else
+                                        [
+                                            {'label': 'Ausencia angina ejercicio', 'value': 0},
+                                            {'label': 'Presencia angina ejercicio', 'value': 1},
+                                            
+                                        ] if var == 'exang' else
+                                            [
+                                                {'label': 'Menor o igual a 120', 'value': 0},
+                                                {'label': 'Mayor a 120', 'value': 1},
+                                                
+                                            ] if var == 'fbs' else
+                                                [
+                                                    {'label': 'Normal', 'value': 0},
+                                                    {'label': 'Anormalidad en la curva ST', 'value': 1},
+                                                    {'label': 'Hipertrofia ventricular probable o definitiva', 'value': 2}
+                                                    
+                                                ] if var == 'restecg' else
+                                                    [
+                                                        {'label': 'Ascendente', 'value': 1},
+                                                        {'label': 'Plana', 'value': 2},
+                                                        {'label': 'Descendente', 'value': 3}
+                                                        
+                                                    ] if var == 'pendiente' else
                             [{'label': val, 'value': val} for val in df[var].unique()]
+                            
                 )
             ),
             value=df[var].unique()[0],  # Default value
