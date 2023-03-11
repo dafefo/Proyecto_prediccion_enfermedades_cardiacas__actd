@@ -15,10 +15,10 @@ from pgmpy.estimators import MaximumLikelihoodEstimator
 from pgmpy.inference import VariableElimination
 ##################CARGA Y MANIPULACION DE DATOS#####################################################
 #Apertura de los datos Daniel
-#data_cardiaca = pd.read_csv("Analitica computacional/Proyecto1 Enfermedades cardiacas/cleveland_data.csv")
+data_cardiaca = pd.read_csv("Analitica computacional/Proyecto1 Enfermedades cardiacas/cleveland_data.csv")
 
 #Apertura datos Christer
-data_cardiaca = pd.read_csv("C:/Users/baka/Desktop/analitica/Proyectos/Proyecto_prediccion_enfermedades_cardiacas__actd/cleveland_data.csv")
+#data_cardiaca = pd.read_csv("C:/Users/baka/Desktop/analitica/Proyectos/Proyecto_prediccion_enfermedades_cardiacas__actd/cleveland_data.csv")
 
 #En las variables ca y thal hay datos faltantes que se ubican con el simbolo ?
 print(data_cardiaca.loc[data_cardiaca["ca"]=="?"])
@@ -98,7 +98,7 @@ from dash.dependencies import Input, Output, State
 # Load the Cleveland Heart Disease dataset
 #df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data', header=None)
 df= data_cardiaca
-
+print(df.columns)
 # Rename the columns with descriptive names
 df.columns = [
     'age', 'edad', 'sexo', 'cp', 'rtrestbps','trestbps', 'rchol','colesterol', 'fbs', 'restecg', 'thalach',

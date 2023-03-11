@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Mar 11 09:58:57 2023
+Created on Fri Mar 10 19:45:57 2023
 
 @author: baka
 """
+
 
 import numpy as np 
 import pandas as pd
@@ -14,10 +15,10 @@ from pgmpy.estimators import MaximumLikelihoodEstimator
 from pgmpy.inference import VariableElimination
 ##################CARGA Y MANIPULACION DE DATOS#####################################################
 #Apertura de los datos Daniel
-#data_cardiaca = pd.read_csv("Analitica computacional/Proyecto1 Enfermedades cardiacas/cleveland_data.csv")
+data_cardiaca = pd.read_csv("Analitica computacional/Proyecto1 Enfermedades cardiacas/cleveland_data.csv")
 
 #Apertura datos Christer
-data_cardiaca = pd.read_csv("C:/Users/baka/Desktop/analitica/Proyectos/Proyecto_prediccion_enfermedades_cardiacas__actd/cleveland_data.csv")
+#data_cardiaca = pd.read_csv("C:/Users/baka/Desktop/analitica/Proyectos/Proyecto_prediccion_enfermedades_cardiacas__actd/cleveland_data.csv")
 
 #En las variables ca y thal hay datos faltantes que se ubican con el simbolo ?
 print(data_cardiaca.loc[data_cardiaca["ca"]=="?"])
@@ -86,24 +87,6 @@ def calcularProbabilidad(selected_values_list):
 
 
 
-import plotly.graph_objects as go
-probabilidadCardiaca=0
-'''
-fig = go.Figure()
-fig.add_trace(go.Indicator(
-    name = "my_trace",
-    domain={'x': [0, 1], 'y': [0, 1]},
-    value=450,
-    mode="gauge+number+delta",
-    title={'text': "Speed"},
-    delta={'reference': 380},
-    gauge={'axis': {'range': [None, 500]},
-           'steps': [
-               {'range': [0, 250], 'color': "lightgray"},
-               {'range': [250, 400], 'color': "gray"}],
-           'threshold': {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': 490}}))
-'''
-
 import numpy as np 
 import pandas as pd
 import plotly.express as px
@@ -111,11 +94,13 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
+import plotly.graph_objects as go
+import dash_daq as daq
 
 # Load the Cleveland Heart Disease dataset
 #df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data', header=None)
 df= data_cardiaca
-
+print(df.columns)
 # Rename the columns with descriptive names
 df.columns = [
     'age', 'edad', 'sexo', 'cp', 'rtrestbps','trestbps', 'rchol','colesterol', 'fbs', 'restecg', 'thalach',
@@ -130,7 +115,6 @@ dropdown_vars = [col for col in df.columns if col not in ['index','age','rtrestb
 # Define the app layout
 app = dash.Dash(__name__)
 app.layout = html.Div([
-    
     html.Div([
         html.Label(f'Seleccione un valor para {var}'),
         dcc.Dropdown(
@@ -170,16 +154,15 @@ app.layout = html.Div([
     ]) for var in dropdown_vars
 ] + [
     html.Button('Submit', id='submit-button', n_clicks=0),
-    html.Div(id='output-container', children=''),html.Div([dcc.Graph(id="my_gauge")])
-    
+    html.Div(id='output-container', children=''),
+    html.Div([daq.Gauge(id="my_gauge", value = 0, max = 1, min = 0,
+                        color = {"gradient":True,"ranges":{"green":[0,0.3], "yellow":[0.3,0.6],"red":[0.6,1]}})])
     
 ])
 
 # Define the app callback
 @app.callback(
-    Output('my_gauge', 'figure'),
-    Output('output-container', 'children'),
-    
+    Output('my_gauge', 'value'),
     [Input('submit-button', 'n_clicks')],
     [State(f'{var}-dropdown', 'value') for var in dropdown_vars]
 )
@@ -190,50 +173,9 @@ def update_output(n_clicks, *selected_values):
         print(selected_values_list)
         print(calcularProbabilidad(selected_values_list))
         probs=calcularProbabilidad(selected_values_list)
-        probabilidadCardiaca=probs.values[1]
-        
-        fig = go.Figure()
-        fig.add_trace(go.Indicator(
-            name = "my_trace",
-            domain={'x': [0, 1], 'y': [0, 1]},
-            value=15,
-            mode="gauge+number+delta",
-            title={'text': "Speed"},
-            delta={'reference': 380},
-            gauge={'axis': {'range': [None, 500]},
-                   'steps': [
-                       {'range': [0, 250], 'color': "lightgray"},
-                       {'range': [250, 400], 'color': "gray"}],
-                   'threshold': {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': 490}}))
-     
-        return fig
-    
-'''@app.callback(
-    Output('my_gauge', 'figure'),
-    [Input('submit-button', 'n_clicks')],
-    [State(f'{var}-dropdown', 'value') for var in dropdown_vars]
-    )
-def update_gauge(n_clicks, *selected_values):
-    if n_clicks > 0:
-        selected_values_list = [val if val != "?" else None for val in selected_values]
-        probs=calcularProbabilidad(selected_values_list)
-        probabilidadCardiaca=probs.values[1]
-        
-        fig = go.Figure(go.Indicator(
-            domain = {'x': [0, 1], 'y': [0, 1]},
-            value = 0.5,
-            mode = "gauge+number+delta",
-            title = {'text': "perro"},
-            delta = {'reference': 0.7},
-            gauge = {'axis': {'range': [None, 1]},
-                     'steps' : [
-                         {'range': [0, 0.5], 'color': "lightgray"},
-                         {'range': [0.5, 0.9], 'color': "gray"}],
-                     'threshold' : {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': 490}}))
-    
-        return fig
-        
-'''
+        value = probs.values[0]
+        return value
+
 # Run the app
 if __name__ == '__main__':
     app.run_server(debug=False)
