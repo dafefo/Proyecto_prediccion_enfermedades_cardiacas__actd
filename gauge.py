@@ -15,10 +15,10 @@ from pgmpy.estimators import MaximumLikelihoodEstimator
 from pgmpy.inference import VariableElimination
 ##################CARGA Y MANIPULACION DE DATOS#####################################################
 #Apertura de los datos Daniel
-#data_cardiaca = pd.read_csv("Analitica computacional/Proyecto1 Enfermedades cardiacas/cleveland_data.csv")
+data_cardiaca = pd.read_csv("Analitica computacional/Proyecto1 Enfermedades cardiacas/cleveland_data.csv")
 
 #Apertura datos Christer
-data_cardiaca = pd.read_csv("C:/Users/baka/Desktop/analitica/Proyectos/Proyecto_prediccion_enfermedades_cardiacas__actd/cleveland_data.csv")
+#data_cardiaca = pd.read_csv("C:/Users/baka/Desktop/analitica/Proyectos/Proyecto_prediccion_enfermedades_cardiacas__actd/cleveland_data.csv")
 
 #En las variables ca y thal hay datos faltantes que se ubican con el simbolo ?
 print(data_cardiaca.loc[data_cardiaca["ca"]=="?"])
@@ -114,7 +114,14 @@ dropdown_vars = [col for col in df.columns if col not in ['index','age','rtrestb
 
 # Define the app layout
 app = dash.Dash(__name__)
+colors = {
+    'background': '#111111',
+    'text': '#7FDBFF'
+}
 app.layout = html.Div([
+    html.H1(children = "Enfermedad Cardiaca: Arteriopatía Coronaria", style={"textAling":"center"}),
+    html.H3(children = "Complete los datos del paciente y los resultados a los distintos examenes que se haya realizado. Una vez termine debe dar clic en el boton submit. Esto permitirá saber la probabilidad de que el paciente sufra un problema de corazón, especificamente una arteriopatía coronaria.")
+]+[
     html.Div([
         html.Label(f'Seleccione un valor para {var}'),
         dcc.Dropdown(
@@ -185,13 +192,14 @@ app.layout = html.Div([
                 )
             ),
             value=df[var].unique()[0],  # Default value
+            
         )
-    ]) for var in dropdown_vars
+    ],style={"color":"black","background-color":"white",'width': '43%', "margin-left":0}) for var in dropdown_vars
+    
 ] + [
     html.Button('Submit', id='submit-button', n_clicks=0),
-    html.Div(id='output-container', children=''),
     html.Div([daq.Gauge(id="my_gauge", value = 0, max = 1, min = 0,
-                        color = {"gradient":True,"ranges":{"green":[0,0.3], "yellow":[0.3,0.6],"red":[0.6,1]}})])
+                        color = {"gradient":True,"ranges":{"green":[0,0.3], "yellow":[0.3,0.6],"red":[0.6,1]}},size = 400)],style={'width': '50%', "float":"right"})
     
 ])
 
@@ -208,7 +216,7 @@ def update_output(n_clicks, *selected_values):
         print(selected_values_list)
         print(calcularProbabilidad(selected_values_list))
         probs=calcularProbabilidad(selected_values_list)
-        value = probs.values[0]
+        value = probs.values[1]
         return value
 
 # Run the app

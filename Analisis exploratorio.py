@@ -32,7 +32,7 @@ estadisticas = data_cardiaca.describe()
 data_cardiaca["cardiac"]=np.where(data_cardiaca["num"]>0,True,False)
 
 #Cambiar los nombres de sexo
-data_cardiaca["sex"]=np.where(data_cardiaca["sex"]>0,"Male","Female")
+data_cardiaca["sex"]=np.where(data_cardiaca["sex"]>0,"Hombre","Mujer")
 
 #Cambiar los nombres de fbs
 data_cardiaca["fbs"]=np.where(data_cardiaca["fbs"]>0,">120","<120")
@@ -44,7 +44,7 @@ data_cardiaca["exang"]=np.where(data_cardiaca["exang"]>0,"Si","No")
 data_cardiaca["slope"]= pd.cut(data_cardiaca["slope"], bins=[0,1,2,3],labels=["positiva","plana","negativa"])
 
 #Cambiar los nombres de thal
-data_cardiaca["thal"]= pd.cut(data_cardiaca["thal"], bins=[0,3,6,7],labels=["normal","fijo","reversible"])
+data_cardiaca["thal"]= pd.cut(data_cardiaca["thal"], bins=[0,3,6,7],labels=["Normal","Fijo","Reversible"])
 
 #Cambiar los nombres de cp
 data_cardiaca["cp"]= pd.cut(data_cardiaca["cp"], bins=[0,1,2,3,4],labels=["Angina normal","Angina atipica","No angina","Asintomatico"])
@@ -63,53 +63,136 @@ data_cardiaca.insert(6,"chol_group",chol_discrt)
 #Se crea una varibale categorica para la presion sanguinea en reposo
 trestbps_discrt = pd.cut(data_cardiaca["trestbps"],bins=[0,119,129,139,179,210], labels=["normal","elevada","presion arterial nivel 1","presion arterial nivel 2","crisis"])
 data_cardiaca.insert(5,"trestbps_group", trestbps_discrt)
-print(data_cardiaca.columns)
-#Histogramas de todas las variables
-fig = make_subplots(rows=3, cols=4,
-    subplot_titles=("Edad", "Sexo", "Colesterol", "Azucar en Sangre", "Angina por ejercicio",
-                    "Pendiente ST","Thal","Numero de vasos","Dolor de pecho","Presion sanguinea",
-                    "Electrogardiograma")
-    )
-
-fig.add_histogram2d(x = data_cardiaca["age_group"],bingroup=data_cardiaca["cardiac"],row=1,col=1)
-fig.add_histogram(x = data_cardiaca["sex"],row=1,col=2)
-fig.add_histogram(x = data_cardiaca["chol_group"],row=1,col=3)
-fig.add_histogram(x = data_cardiaca["fbs"],row=1,col=4)
-fig.add_histogram(x = data_cardiaca["exang"],row=2,col=1)
-fig.add_histogram(x = data_cardiaca["slope"],row=2,col=2)
-fig.add_histogram(x = data_cardiaca["thal"],row=2,col=3)
-fig.add_histogram(x = data_cardiaca["ca"],row=2,col=4)
-fig.add_histogram(x = data_cardiaca["cp"],row=3,col=1)
-fig.add_histogram(x = data_cardiaca["trestbps_group"],row=3,col=2)
-fig.add_histogram(x = data_cardiaca["restecg"],row=3,col=3)
-
-
-
-fig.show()
 #Edad
 print(data_cardiaca.head())
 fig = px.histogram(data_cardiaca, x = "age_group", color = "cardiac", text_auto=True, barnorm= "percent",
                    category_orders={"age_group":["Joven","Mayor"],
-                                    "cardiac":[True,False]})
+                                    "cardiac":[True,False]},
+                    color_discrete_map={True:"#F58518", False:"#BAB0AC"},
+                    title="Relacion edad y enfermedad cardiaca")
+fig.update_layout(legend_title = "Sufre de enfermedad cardiaca",
+                  xaxis_title = "Edad",
+                  yaxis_title = "Conteo(Porcentaje)")
 fig.show()
-#
+#Sexo
+fig = px.histogram(data_cardiaca, x = "sex", color = "cardiac", text_auto=True, barnorm= "percent",
+                   category_orders={"sex":["Hombre","Mujer"],
+                                    "cardiac":[True,False]},
+                    color_discrete_map={True:"#F58518", False:"#BAB0AC"},
+                    title="Relación sexo y enfermedad cardiaca")
+fig.update_layout(legend_title = "Sufre de enfermedad cardiaca",
+                  xaxis_title = "Sexo",
+                  yaxis_title = "Conteo(Porcentaje)")
+fig.show()
 
-#Presion sanguinea
+#Cp
+fig = px.histogram(data_cardiaca, x = "cp", color = "cardiac", text_auto=True, barnorm= "percent",
+                   category_orders={"cp":["Angina normal","Angina atipica","No angina","Asintomatico"],
+                                    "cardiac":[True,False]},
+                    color_discrete_map={True:"#F58518", False:"#BAB0AC"},
+                    title="Relación dolor de pecho y enfermedad cardiaca")
+fig.update_layout(legend_title = "Sufre de enfermedad cardiaca",
+                  xaxis_title = "Dolor de Pecho",
+                  yaxis_title = "Conteo(Porcentaje)")
+fig.show()
+
+#trestbps
 fig = px.histogram(data_cardiaca, x = "trestbps_group", color = "cardiac", text_auto=True, barnorm= "percent",
                    category_orders={"trestbps_group":["normal","elevada","presion arterial nivel 1","presion arterial nivel 2","crisis"],
-                                    "cardiac":[True,False]})
+                                    "cardiac":[True,False]},
+                                    color_discrete_map={True:"#F58518", False:"#BAB0AC"},
+                                    title="Relación presión arterial en reposo y enfermedad cardiaca")
+fig.update_layout(legend_title = "Sufre de enfermedad cardiaca",
+                  xaxis_title = "Presión Arterial",
+                  yaxis_title = "Conteo(Porcentaje)")
 fig.show()
 
-#Distribucion de las edades categorizando por sexo y si esta diagnosticado con enfermedad cardiaca
+#Colesterol
+fig = px.histogram(data_cardiaca, x = "chol_group", color = "cardiac", text_auto=True, barnorm= "percent",
+                   category_orders={"chol_group":["normal","alto","muy alto"],
+                                    "cardiac":[True,False]},
+                    color_discrete_map={True:"#F58518", False:"#BAB0AC"},
+                    title="Relación nivel de colesterol y enfermedad cardiaca")
+fig.update_layout(legend_title = "Sufre de enfermedad cardiaca",
+                  xaxis_title = "Nivel de Colesterol",
+                  yaxis_title = "Conteo(Porcentaje)")
+fig.show()
+
+#fbs
+fig = px.histogram(data_cardiaca, x = "fbs", color = "cardiac", text_auto=True, barnorm= "percent",
+                   category_orders={"fbs":[">120","<120"],
+                                    "cardiac":[True,False]},
+                    color_discrete_map={True:"#F58518", False:"#BAB0AC"},
+                    title="Relación glicemia en ayunas y enfermedad cardiaca")
+fig.update_layout(legend_title = "Sufre de enfermedad cardiaca",
+                  xaxis_title = "Azucar en sangre (mg/dl)",
+                  yaxis_title = "Conteo(Porcentaje)")
+fig.show()
+
+#restecg
+fig = px.histogram(data_cardiaca, x = "restecg", color = "cardiac", text_auto=True, barnorm= "percent",
+                   category_orders={"restecg":["Normal","ST anormal","Hipertrofia ventricular"],
+                                    "cardiac":[True,False]},
+                    color_discrete_map={True:"#F58518", False:"#BAB0AC"},
+                    title="Relación electrocardiograma y enfermedad cardiaca")
+fig.update_layout(legend_title = "Sufre de enfermedad cardiaca",
+                  xaxis_title = "Resultado electrocardiograma",
+                  yaxis_title = "Conteo(Porcentaje)")
+fig.show()
+
+#exang
+fig = px.histogram(data_cardiaca, x = "exang", color = "cardiac", text_auto=True, barnorm= "percent",
+                   category_orders={"exang":["Si","No"],
+                                    "cardiac":[True,False]},
+                    color_discrete_map={True:"#F58518", False:"#BAB0AC"},
+                    title="Relación angina inducida por ejercicio y enfermedad cardiaca")
+fig.update_layout(legend_title = "Sufre de enfermedad cardiaca",
+                  xaxis_title = "Presencia de angina durante ejercicio ",
+                  yaxis_title = "Conteo(Porcentaje)")
+fig.show()
+
+#slope
+fig = px.histogram(data_cardiaca, x = "slope", color = "cardiac", text_auto=True, barnorm= "percent",
+                   category_orders={"slope":["positiva","plana","negativa"],
+                                    "cardiac":[True,False]},
+                    color_discrete_map={True:"#F58518", False:"#BAB0AC"},
+                    title="Relación pendiente de la curva ST y enfermedad cardiaca")
+fig.update_layout(legend_title = "Sufre de enfermedad cardiaca",
+                  xaxis_title = "Pendiente curva ST",
+                  yaxis_title = "Conteo(Porcentaje)")
+fig.show()
+
+#ca
+fig = px.histogram(data_cardiaca, x = "ca", color = "cardiac", text_auto=True, barnorm= "percent",
+                   category_orders={"cardiac":[True,False]},
+                    color_discrete_map={True:"#F58518", False:"#BAB0AC"},
+                    title="Relación número de vasos sanguineos mayores coloreados con fluroscopia y enfermedad cardiaca")
+fig.update_layout(legend_title = "Sufre de enfermedad cardiaca",
+                  xaxis_title = "Número de vasos marcados",
+                  yaxis_title = "Conteo(Porcentaje)")
+fig.show()
+
+#thal
+fig = px.histogram(data_cardiaca, x = "thal", color = "cardiac", text_auto=True, barnorm= "percent",
+                   category_orders={"thal":["Normal","Fijo","Reversible"],"cardiac":[True,False]},
+                    color_discrete_map={True:"#F58518", False:"#BAB0AC"},
+                    title="Relación Thal y enfermedad cardiaca")
+fig.update_layout(legend_title = "Sufre de enfermedad cardiaca",
+                  xaxis_title = "Thal",
+                  yaxis_title = "Conteo(Porcentaje)")
+fig.show()
+
+###################################################################################################################
+"""#Distribucion de las edades categorizando por sexo y si esta diagnosticado con enfermedad cardiaca
 fig = px.histogram(data_cardiaca,x = "age", color = "sex", pattern_shape = "cardiac",
                    labels = {"age":"Age",
                              "sex":"Sex",
                              "cardiac":"Diagnostico"})
-#fig.show()
+fig.show()
 
 #Distribucion de los casos que reportan dolor en el pecho
 fig = px.pie(data_cardiaca, names = "cp")
-#fig.show()
+fig.show()
 
 #Distribucion de la presion sanguinea en reposos sistolica
 fig = px.histogram(data_cardiaca,x = "trestbps", color = "sex", pattern_shape = "cardiac",
@@ -136,7 +219,7 @@ fig.add_annotation(x=190,
             text="Crisis de hipertension",
             showarrow=True,
             arrowhead=1)
-#fig.show()
+fig.show()
 
 #Distribucion de niveles de colesterol
 #Dada la grafiac se encontro que hay un dato atipico pues se tiene un colesterol mayor a 560 que esto ya estaria la persona muerta
@@ -157,6 +240,6 @@ fig.add_annotation(x=250,
             showarrow=True,
             arrowhead=1)
 #fig.show()
-
+"""
 
 a = 1
