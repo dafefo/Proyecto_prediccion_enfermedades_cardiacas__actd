@@ -67,6 +67,22 @@ data_cardiaca.insert(6,"chol_group",chol_discrt)
 #Se crea una varibale categorica para la presion sanguinea en reposo
 trestbps_discrt = pd.cut(data_cardiaca["trestbps"],bins=[0,119,129,139,179,210], labels=["normal","elevada","presion arterial nivel 1","presion arterial nivel 2","crisis"])
 data_cardiaca.insert(5,"trestbps_group", trestbps_discrt)
+
+#Subplot de los histogramas de las variables que generan la enfermedad
+fig = make_subplots(rows=3, cols=2, subplot_titles=["Edad","Sexo","Nivel de colesterol","Glicemia en Ayunas"])
+
+trace0 = go.Histogram(x=data_cardiaca["age"], name="Edad", showlegend=False, marker=dict(color="#F58518"))
+trace1 = go.Histogram(x=data_cardiaca["sex"], name = "Sexo", showlegend=False, marker=dict(color="#BAB0AC"))
+trace2 = go.Histogram(x=data_cardiaca["chol"], name = "Nivel de colesterol", showlegend=False, marker=dict(color="#F58518"))
+trace3 = go.Histogram(x=data_cardiaca["fbs"], name = "Glicemia en Ayunas", showlegend=False, marker=dict(color="#BAB0AC"))
+
+fig.append_trace(trace0, 1, 1)
+fig.append_trace(trace1, 1, 2)
+fig.append_trace(trace2, 2, 1)
+fig.append_trace(trace3, 2, 2)
+
+
+fig.show()
 #Edad
 print(data_cardiaca.head())
 fig = px.histogram(data_cardiaca, x = "age_group", color = "cardiac", text_auto=True, barnorm= "percent",
@@ -180,9 +196,9 @@ fig.show()
 fig = px.histogram(data_cardiaca, x = "thal", color = "cardiac", text_auto=True, barnorm= "percent",
                    category_orders={"thal":["Normal","Fijo","Reversible"],"cardiac":[True,False]},
                     color_discrete_map={True:"#F58518", False:"#BAB0AC"},
-                    title="Relación Thal y enfermedad cardiaca")
+                    title="Relación Thallium Stress test y enfermedad cardiaca")
 fig.update_layout(legend_title = "Sufre de enfermedad cardiaca",
-                  xaxis_title = "Thal",
+                  xaxis_title = "Thallium Stress Test",
                   yaxis_title = "Conteo(Porcentaje)")
 fig.show()
 
