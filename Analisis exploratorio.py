@@ -5,11 +5,15 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
 #Apertura de los datos Daniel
-data_cardiaca = pd.read_csv("Analitica computacional/Proyecto1 Enfermedades cardiacas/cleveland_data.csv")
+#data_cardiaca = pd.read_csv("Analitica computacional/Proyecto1 Enfermedades cardiacas/cleveland_data.csv")
 
 #Apertura datos Christer
 #data_cardiaca = pd.read_csv("cleveland_data.csv")
-
+data_cardiaca = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data', header=None)
+data_cardiaca.columns = [
+    'age', 'sex', 'cp', 'trestbps', 'chol','fbs', 'restecg','thalac', 'exang', 'oldpeak', 'slope',
+    'ca', 'thal', 'num'
+]
 #En las variables ca y thal hay datos faltantes que se ubican con el simbolo ?
 print(data_cardiaca.loc[data_cardiaca["ca"]=="?"])
 #en la variable ca estan en las posiciones 166,192,287,302
